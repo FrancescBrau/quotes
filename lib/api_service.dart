@@ -3,13 +3,14 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   final String apiUrl = 'https://api.api-ninjas.com/v1/quotes';
+  final String apiKey = '479njGvbKoeaTeuLmZF7cg==qnG32C57hdFqpU6x';
 
   Future<Map<String, String>> getQuote() async {
     try {
       final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
-          'X-Api-Key': '479njGvbKoeaTeuLmZF7cg==qnG32C57hdFqpU6x',
+          'X-Api-Key': apiKey,
         },
       );
 

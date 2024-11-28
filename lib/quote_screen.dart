@@ -10,61 +10,82 @@ class QuoteScreen extends StatefulWidget {
 }
 
 class _QuoteScreenState extends State<QuoteScreen> {
-  late Future<Map<String, String>> quote;
+  late List<Map<String, String>> quotes;
+  int currentIndex = -1;
 
   @override
   void initState() {
     super.initState();
-    quote = ApiService().getQuote();
+    quotes = [];
+  }
+
+  void _getNewQuote() async {
+    try {
+      final newQuote = await ApiService().getQuote();
+      setState(() {
+        quotes.add(newQuote);
+        currentIndex = quotes.length - 1;
+      });
+    } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Error. Something went wrong.')),
+      );
+    }
+  }
+
+  void _getPreviousQuote() {
+    if (currentIndex > 0) {
+      setState(() {
+        currentIndex--;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Quotes')),
-        body: FutureBuilder(
-          future: quote,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text('Error: ${snapshot.hasError}'),
-              );
-            } else if (!snapshot.hasData || snapshot.data == null) {
-              return const Center(
-                child: Text('Quotes not found'),
-              );
-            } else {
-              //testing UI in Terminal
-
-              // print('Quote: ${snapshot.data!['quote']}');
-              // print('Author: ${snapshot.data!['author']}');
-
-              final quoteData = snapshot.data!;
-              return Padding(
-                padding: const EdgeInsets.all(32),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text('"${quoteData['quote']}"'),
-                    const SizedBox(height: 24),
-                    Text('- ${quoteData['author']}'),
-                    const SizedBox(height: 48),
-                    QuoteButton(
-                      onPressed: _getNewQuote,
-                    ),
-                  ],
-                ),
-              );
-            }
-          },
-        ));
-  }
-
-  void _getNewQuote() {
-    setState(() {
-      quote = ApiService().getQuote();
-    });
+      appBar: AppBar(title: const Text('Quotes')),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (currentIndex >= 0 && currentIndex < quotes.length) ...[
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    '"${quotes[currentIndex]['quote']}"',
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    '- ${quotes[currentIndex]['author']}',
+                  ),
+                ],
+              ),
+            ),
+          ] else ...[
+            const Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Press button "Get a new Quote" for a new Quote'),
+                SizedBox(height: 32)
+              ],
+            )
+          ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              QuoteButton(onPressed: _getNewQuote),
+              const SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: _getPreviousQuote,
+                child: const Text('Back to last Quote'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

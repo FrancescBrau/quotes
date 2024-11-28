@@ -8,6 +8,6 @@ class QuoteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        onPressed: onPressed, child: const Icon(Icons.refresh));
+        onPressed: onPressed, child: const Text('Get a new Quote'));
   }
 }
