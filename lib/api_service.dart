@@ -6,31 +6,22 @@ class ApiService {
   final String apiKey = '479njGvbKoeaTeuLmZF7cg==qnG32C57hdFqpU6x';
 
   Future<Map<String, String>> getQuote() async {
-    try {
-      final response = await http.get(
-        Uri.parse(apiUrl),
-        headers: {
-          'X-Api-Key': apiKey,
-        },
-      );
+    final response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'X-Api-Key': apiKey,
+      },
+    );
 
-      // testing code. quotes not found. print added to show response in Terminal
+    final data = json.decode(response.body);
 
-      //print('Response status: ${response.statusCode}');
-      //print('Response body: ${response.body}');
-
-      final data = json.decode(response.body);
-
-      if (data.isNotEmpty) {
-        return {
-          'quote': data[0]['quote'],
-          'author': data[0]['author'],
-        };
-      } else {
-        throw Exception('Not found');
-      }
-    } catch (e) {
-      throw Exception('Error loading: $e');
+    if (data.isNotEmpty) {
+      return {
+        'quote': data[0]['quote'],
+        'author': data[0]['author'],
+      };
+    } else {
+      throw Exception('Error');
     }
   }
 }
