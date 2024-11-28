@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quotes/api_service.dart';
+import 'package:quotes/quote_button.dart';
 
 class QuoteScreen extends StatefulWidget {
   const QuoteScreen({super.key});
@@ -37,8 +38,8 @@ class _QuoteScreenState extends State<QuoteScreen> {
             } else {
               //testing UI in Terminal
 
-              print('Quote: ${snapshot.data!['quote']}');
-              print('Author: ${snapshot.data!['author']}');
+              // print('Quote: ${snapshot.data!['quote']}');
+              // print('Author: ${snapshot.data!['author']}');
 
               final quoteData = snapshot.data!;
               return Padding(
@@ -48,12 +49,22 @@ class _QuoteScreenState extends State<QuoteScreen> {
                   children: [
                     Text('"${quoteData['quote']}"'),
                     const SizedBox(height: 24),
-                    Text('- ${quoteData['author']}')
+                    Text('- ${quoteData['author']}'),
+                    const SizedBox(height: 48),
+                    QuoteButton(
+                      onPressed: _getNewQuote,
+                    ),
                   ],
                 ),
               );
             }
           },
         ));
+  }
+
+  void _getNewQuote() {
+    setState(() {
+      quote = ApiService().getQuote();
+    });
   }
 }
