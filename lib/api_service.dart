@@ -13,6 +13,11 @@ class ApiService {
         },
       );
 
+      // testing code. quotes not found. print added to show response in Terminal
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       final data = json.decode(response.body);
 
       if (data.isNotEmpty) {
