@@ -30,11 +30,16 @@ class _QuoteScreenState extends State<QuoteScreen> {
               return Center(
                 child: Text('Error: ${snapshot.hasError}'),
               );
-            } else if (snapshot.hasData) {
+            } else if (!snapshot.hasData || snapshot.data == null) {
               return const Center(
                 child: Text('Quotes not found'),
               );
             } else {
+              //testing UI in Terminal
+
+              print('Quote: ${snapshot.data!['quote']}');
+              print('Author: ${snapshot.data!['author']}');
+
               final quoteData = snapshot.data!;
               return Padding(
                 padding: const EdgeInsets.all(32),
