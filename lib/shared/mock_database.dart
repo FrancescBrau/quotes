@@ -1,6 +1,6 @@
 import 'package:quotes/shared/database_repository.dart';
 
-class MockDatabase implements DatabaseRepository {
+class MockDatabase implements Database_Repository {
   final List<Map<String, String>> _quotes = [];
 
   @override
@@ -21,5 +21,17 @@ class MockDatabase implements DatabaseRepository {
   @override
   Future<void> deleteQuote(int quote) async {
     _quotes.removeAt(quote);
+  }
+
+  @override
+  Map<String, String>? getLastQuote() {
+    // TODO: implement getLastQuote
+    throw UnimplementedError();
+  }
+
+  @override
+  List<Map<String, String>> getQuotes() {
+    // TODO: implement getQuotes
+    throw UnimplementedError();
   }
 }
